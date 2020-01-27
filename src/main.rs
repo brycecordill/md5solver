@@ -15,19 +15,20 @@ fn main() {
         None => process::exit(1),
     };
 
-    println!("Searching for MD5 hashes that start with: {}", to_search);
+    println!("Computing MD5 hashes that start with: {}", to_search);
 
     loop {
         let rand_string = rand::thread_rng()
             .sample_iter(&Alphanumeric)
-            .take(15)
+            .take(10)
             .collect::<String>();
 
         let digest = md5::compute(&rand_string);
         let as_hex = format!("{:x}", digest);
         
         if as_hex.starts_with(to_search) {
-            println!("String: {} \t MD5: {}", rand_string, as_hex);
+            println!("String: {}\tMD5: {}", rand_string, as_hex);
+            break;
         }
     }
 }
