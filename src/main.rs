@@ -19,7 +19,7 @@ fn main() {
         None => process::exit(1),
     };
 
-    println!("Computing MD5 hashes that start with: {}", to_search);
+    println!("Computing MD5 hashes that start with: {}\n", to_search);
 
     let mut workers = vec![];
     let mut comms = vec![];
