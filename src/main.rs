@@ -2,7 +2,7 @@ extern crate rand;
 extern crate md5;
 use std::{env, process, thread};
 use rand::{Rng, distributions::Alphanumeric};
-use std::sync::mpsc;
+use std::sync::{mpsc, Arc};
 
 static NUM_THREAD: i32 = 8;
 static STR_SIZE: usize = 10;
@@ -14,10 +14,8 @@ fn main() {
         process::exit(1);
     }
 
-    let to_search = match args.get(1){
-        Some(arg) => arg,
-        None => process::exit(1),
-    };
+    let to_search = Arc::new(
+        args.get(1).unwrap().clone());
 
     println!("Computing MD5 hashes that start with: {}\n", to_search);
 
@@ -26,7 +24,7 @@ fn main() {
     let (main_tx, main_rx) = mpsc::channel();
 
     for _i in 0..NUM_THREAD {
-        let temp_str = to_search.clone();
+        let temp_str = Arc::clone(&to_search);
         let temp_main_tx = main_tx.clone();
         let (temp_tx, temp_rx) = mpsc::channel();
         comms.push(temp_tx);
