@@ -1,13 +1,15 @@
+extern crate num_cpus;
+
 use std::sync::Arc;
 
 pub struct Args {
     pub str_len: usize,
-    pub thread_num: u8,
+    pub thread_num: usize,
     pub search_str: Arc<String>,
 }
 impl Args {
     pub fn new(arg_vec: Vec<String>) -> Result<Args, &'static str> {
-        let mut thread_num = 8;
+        let mut thread_num = num_cpus::get();
         let mut str_len = 10;
         let mut search_str: Option<String> = None;
         let mut i = 1;
