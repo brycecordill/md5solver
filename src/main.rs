@@ -11,7 +11,7 @@ use std::sync::{mpsc, Arc};
 fn main() {
     let arg_vec: Vec<String> = env::args().collect();
     if arg_vec.len() < 2 || arg_vec.len() > 6 {
-        eprintln!("\nError: Invalid argument size!\n");
+        eprintln!("\nError: Invalid number of arguments!\n");
         print_usage();
         process::exit(1);
     }
@@ -53,7 +53,12 @@ fn main() {
 }
 
 fn print_usage() {
-    unimplemented!("Usage info will go here");
+    println!("USAGE: md5solver sum [OPTIONS]");
+    println!("Where 'sum' is the desired characters at the \
+        start of the md5 sum");
+    println!("\nOptions:
+        -t\tNumber of threads to utilize (Default: number of logical CPUs)
+        -l\tLength of the random string (Default: 10)");
 }
 
 fn bruteforce_md5(search_str: &str, rx: mpsc::Receiver<bool>, str_len: usize) {
