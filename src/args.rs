@@ -9,7 +9,7 @@ impl Args {
     pub fn new(arg_vec: Vec<String>) -> Result<Args, &'static str> {
         let mut thread_num = 8;
         let mut str_len = 10;
-        let mut search_str = String::from("-1");
+        let mut search_str: Option<String> = None;
         let mut i = 1;
 
         while  i < arg_vec.len(){
@@ -28,16 +28,16 @@ impl Args {
                 };
             }
             else {
-                search_str = arg_vec.get(i).unwrap().clone();
+                search_str = Some(arg_vec.get(i).unwrap().clone());
             }
             i += 1;
         }
 
-        if search_str == "-1" {
+        if search_str == None {
             return Err("No search string given")
         }
 
-        let search_str = Arc::new(search_str);
+        let search_str = Arc::new(search_str.unwrap());
 
         Ok(Args {str_len, thread_num, search_str})
     }
