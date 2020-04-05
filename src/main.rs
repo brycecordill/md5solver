@@ -8,6 +8,9 @@ use std::{env, process, thread};
 use rand::{Rng, distributions::Alphanumeric};
 use std::sync::{mpsc, Arc};
 
+// Size of an md5 sum
+static MD5_SIZE: usize = 32;
+
 fn main() {
     let arg_vec: Vec<String> = env::args().collect();
     if arg_vec.len() < 2 || arg_vec.len() > 6 {
@@ -62,14 +65,18 @@ fn print_usage() {
 }
 
 fn bruteforce_md5(search_str: &str, rx: mpsc::Receiver<bool>, str_len: usize) {
+    // Pre-allocate strings for use in the loop
+    let mut rand_string = String::with_capacity(str_len);
+    let mut as_hex = String::with_capacity(MD5_SIZE);
+    
     while rx.try_recv().is_err() {
-        let rand_string = rand::thread_rng()
+        rand_string = rand::thread_rng()
             .sample_iter(&Alphanumeric)
             .take(str_len)
             .collect::<String>();
 
         let digest = md5::compute(&rand_string);
-        let as_hex = format!("{:x}", digest);
+        as_hex = format!("{:x}", digest);
         
         if as_hex.starts_with(search_str) {
             println!("String: {}\tMD5: {}", rand_string, as_hex);
